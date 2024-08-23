@@ -1,0 +1,60 @@
+import java.util.Random;
+import java.util.Scanner;
+public class NumberGuessingGame {
+    private static final int MAX_ATTEMPTS = 10;
+    private static final int MIN_NUMBER = 1;
+    private static final int MAX_NUMBER = 100;
+    private static final Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) {
+        int totalScore = 0;
+        int totalRounds = 0;
+        boolean playAgain;
+        do {
+            boolean guessedCorrectly = playRound();
+            if (guessedCorrectly) {
+                int score = calculateScore(totalRounds);
+                totalScore += score;
+                System.out.println("Your score for this round is: " + score);
+            } else {
+                System.out.println("No score this round.");
+            }
+            totalRounds++;
+            System.out.println("Total score: " + totalScore);
+            System.out.println("Total rounds played: " + totalRounds);
+            System.out.print("\nWould you like to play another round? (yes/no): ");
+            String response = scanner.next().trim().toLowerCase();
+            playAgain = response.equals("yes");
+        } while (playAgain);
+        System.out.println("\nThanks for playing! Your final score is: " + totalScore);
+        System.out.println("Total rounds played: " + totalRounds);
+    }
+    private static boolean playRound() {
+        Random random = new Random();
+        int numberToGuess = random.nextInt(MAX_NUMBER - MIN_NUMBER + 1) + MIN_NUMBER;
+        int attempts = 0;
+        boolean guessedCorrectly = false;
+        System.out.println("\nGuess the number between " + MIN_NUMBER + " and " + MAX_NUMBER + ".");
+        while (attempts < MAX_ATTEMPTS && !guessedCorrectly) {
+            System.out.print("Attempt " + (attempts + 1) + "/" + MAX_ATTEMPTS + ": ");
+            int guess = scanner.nextInt();
+            if (guess < numberToGuess) {
+                System.out.println("Too low!");
+            } else if (guess > numberToGuess) {
+                System.out.println("Too high!");
+            } else {
+                guessedCorrectly = true;
+                System.out.println("Congratulations! You guessed the number " + numberToGuess + " correctly.");
+            }
+            attempts++;
+        }
+        if (!guessedCorrectly) {
+            System.out.println("Sorry, you've used all " + MAX_ATTEMPTS + " attempts. The number was " + numberToGuess + ".");
+        }
+        return guessedCorrectly;
+    }
+    private static int calculateScore(int round) {
+        int maxScore = 100;
+        int score = Math.max(0, maxScore - (round * 10));
+        return score;
+    }
+}
