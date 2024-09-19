@@ -1,0 +1,89 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
+
+class Question {
+    private String question;
+    private String[] options;
+    private int correctAnswer;
+
+    public Question(String question, String[] options, int correctAnswer) {
+        this.question = question;
+        this.options = options;
+        this.correctAnswer = correctAnswer;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String[] getOptions() {
+        return options;
+    }
+
+    public int getCorrectAnswer() {
+        return correctAnswer;
+    }
+}
+
+public class Quiz {
+    private List<Question> questions;
+    private int score;
+    private Scanner scanner;
+    private Timer timer;
+
+    public Quiz(List<Question> questions) {
+        this.questions = questions;
+        this.score = 0;
+        this.scanner = new Scanner(System.in);
+        this.timer = new Timer();
+    }
+
+    public void startQuiz() {
+        for (Question question : questions) {
+            displayQuestion(question);
+            int userAnswer = getUserAnswer();
+            if (userAnswer == question.getCorrectAnswer()) {
+                score++;
+                System.out.println("Correct!");
+            } else {
+                System.out.println("Incorrect. The correct answer is " + question.getCorrectAnswer());
+            }
+        }
+        displayResult();
+    }
+
+    private void displayQuestion(Question question) {
+        System.out.println(question.getQuestion());
+        String[] options = question.getOptions();
+        for (int i = 0; i < options.length; i++) {
+            System.out.println((i + 1) + ". " + options[i]);
+        }
+        System.out.print("Enter your answer (1-" + options.length + "): ");
+    }
+
+    private int getUserAnswer() {
+        int userAnswer = scanner.nextInt();
+        return userAnswer;
+    }
+
+    private void displayResult() {
+        System.out.println("Quiz complete! Your score is " + score + " out of " + questions.size());
+        System.out.println("Correct answers: ");
+        for (int i = 0; i < questions.size(); i++) {
+            System.out.println((i + 1) + ". " + questions.get(i).getCorrectAnswer());
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Question> questions = new ArrayList<>();
+        questions.add(new Question("What is the capital of France?", new String[]{"Paris", "London", "Berlin", "Rome"}, 1));
+        questions.add(new Question("What is the largest planet in our solar system?", new String[]{"Earth", "Saturn", "Jupiter", "Uranus"}, 3));
+        questions.add(new Question("What is the smallest country in the world?", new String[]{"Vatican City", "Monaco", "Nauru", "Tuvalu"}, 1));
+
+        Quiz quiz = new Quiz(questions);
+        quiz.startQuiz();
+    }
+}
